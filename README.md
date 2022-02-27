@@ -1,8 +1,12 @@
 # tool-for-tantan
 自动刷探探的工具
 ===
-这个工具基于网易开发的**airtest**对网易**MUMU安卓模拟器**上的*探探*进行自动化操作，也可以在airtest上连接其它安卓设备使用，具体可见[Airtest官方文档](https://airtest.readthedocs.io/zh_CN/latest/)
+这个工具基于网易开发的**airtest**对网易**MUMU安卓模拟器**上的*探探*进行自动化操作，也可以在airtest上连接其它安卓设备使用
+
+具体可见[Airtest官方文档](https://airtest.readthedocs.io/zh_CN/latest/)
+
 颜值打分根据的是百度API的人脸属性进行打分，可以自动设置心动颜值阈值，实现高效右滑。
+
 未来开发
 ----
 未来可以进一步在获取大量数据的基础上，手动标注心动女生，采用自己的搭建的神经网络进行监督学习，实现按照个人口味进行自动右滑的操作。
