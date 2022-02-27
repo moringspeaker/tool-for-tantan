@@ -6,10 +6,12 @@ Created on 2019-06-21
 @author: DaDaBaoBaoRen
 """
 
+
 import requests
 import base64
 import tkinter.filedialog
 import json
+import timeout_decorator
 
 def get_access_token(client_id, client_secret):
     host = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=' + client_id + '&client_secret=' + client_secret
@@ -29,6 +31,26 @@ def open_pic2base64():
     img = base64.b64encode(f.read()).decode('utf-8')
     return img
 
+#@timeout_decorator.timeout(5)
+def request_data(request_url,params,header):
+    s = requests.session()
+    s.keep_alive = False
+    response1 = s.post(url=request_url, data=params, headers=header)
+    json1 = response1.json()
+    if json1['error_code'] != 0:
+        print('不露脸，那没办法了')
+    #     return (1, 0)
+    # print(json.loads(json.dumps(json1)))
+    # print("性别为", json1["result"]["face_list"][0]['gender']['type'])
+    # print("年龄为", json1["result"]["face_list"][0]['age'], '岁')
+    # print("人种为", json1["result"]["face_list"][0]['race']['type'])
+    # print("颜值评分为", json1["result"]["face_list"][0]['beauty'], '分/100分')
+    # print("是否带眼镜", json1["result"]["face_list"][0]['glasses']['type'])
+    # print("脸部模糊度", json1["result"]["face_list"][0]["quality"]['blur'])
+    blur = json1["result"]["face_list"][0]["quality"]['blur']
+    beauty = json1["result"]["face_list"][0]['beauty']
+    score = (blur, beauty)
+    return (score)
 def bd_rec_face(client_id, client_secret):
     request_url = "https://aip.baidubce.com/rest/2.0/face/v3/detect"
     params = {"image": open_pic2base64(), "image_type": "BASE64",
@@ -39,22 +61,8 @@ def bd_rec_face(client_id, client_secret):
     request_url = request_url + "?access_token=" + access_token
 
     request_url = request_url + "?access_token=" + access_token
-    response1 = requests.post(url=request_url, data=params, headers=header)
-    json1 = response1.json()
-    if json1['error_code']!=0:
-        print('不露脸，那没办法了')
-        return(1,0)
-    # print(json.loads(json.dumps(json1)))
-    # print("性别为", json1["result"]["face_list"][0]['gender']['type'])
-    # print("年龄为", json1["result"]["face_list"][0]['age'], '岁')
-    # print("人种为", json1["result"]["face_list"][0]['race']['type'])
-    # print("颜值评分为", json1["result"]["face_list"][0]['beauty'], '分/100分')
-    # print("是否带眼镜", json1["result"]["face_list"][0]['glasses']['type'])
-    # print("脸部模糊度",json1["result"]["face_list"][0]["quality"]['blur'])
-    blur = json1["result"]["face_list"][0]["quality"]['blur']
-    beauty = json1["result"]["face_list"][0]['beauty']
-    score = (blur, beauty)
-    return (score)
+    return request_data(request_url,params,header)
+
 def fuc():
     # 以下为代码功能测试：
     # 账户id，client_id 为官网获取的AK， client_secret 为官网获取的SK。
