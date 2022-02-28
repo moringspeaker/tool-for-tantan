@@ -22,7 +22,7 @@ if not cli_setup():
 LIMIT_LINE=90   #超级喜欢标准
 STANDARD=65     #颜值分及格标准
 BLUR=0.7
-ROUNDS=10#一次划多少
+ROUNDS=100#一次划多少
 Width,Height = poco.get_screen_size()
 
 # Time= datetime.datetime.now()
@@ -47,9 +47,9 @@ def detect():
         with open("./result.csv", "w",newline='') as f:
             df1.to_csv(f,index=0)
             num=-1
-    Tf=time.perf_counter()
     for i in range(5):
         time.sleep(1)
+
         if poco(name=r"com.p1.mobile.putong:id/cancel").exists():
             poco(name=r"com.p1.mobile.putong:id/cancel").click()
         if poco("com.p1.mobile.putong:id/quickchat_logo_ab").exists():  # 出现即刻聊天就立即右滑
@@ -69,8 +69,13 @@ def detect():
                     continue
             touch((Width * 0.9244, Height * 0.7895), duration=0.3)
             time.sleep(1)
-            name = poco(name="com.p1.mobile.putong:id/name").get_text()
-            age = poco(name=r"com.p1.mobile.putong:id/age").get_text()
+            try:
+                name = poco(name="com.p1.mobile.putong:id/name").get_text()
+                age = poco(name=r"com.p1.mobile.putong:id/age").get_text()
+            except Exception:
+                poco(name="com.p1.mobile.putong:id/dislike").child(name="android.widget.ImageView").click() #出现问题立刻不喜欢划走
+                i -= 1
+                continue
             if poco(name=r"com.p1.mobile.putong:id/zodiac_type").exists():
                 zodiac = poco(name=r"com.p1.mobile.putong:id/zodiac_type").get_text()
             else:
@@ -136,8 +141,9 @@ def detect():
          '是否喜欢？': likes})
     with open('./result.csv','a',newline='') as f:
         df2.to_csv(f, mode='a', header=None, index=0)
-    Ts=time.perf_counter()
-    print('程序运行时间:%s秒' % (Ts - Tf))
 if __name__=='__main__':
+    Tf = time.perf_counter()
     for i in range(ROUNDS):
         detect()
+    Ts=time.perf_counter()
+    print('程序运行时间:%s秒' % (Ts - Tf))
