@@ -18,9 +18,9 @@ if not cli_setup():
     auto_setup(__file__, logdir=None, devices=["Android:///",])
 
 LIMIT_LINE=90   #超级喜欢标准
-STANDARD=63    #颜值分及格标准
+STANDARD=65   #颜值分及格标准
 BLUR=0.7
-ROUNDS=5#一次划多少
+ROUNDS=1000#一次划多少
 Width,Height = poco.get_screen_size()
 def add_rows(df,l):
 
@@ -107,10 +107,16 @@ def detect():
 if __name__=='__main__':
     Tf = time.perf_counter()
     for i in range(ROUNDS):
-        detect()
-        # except:
-        #     poco(name="com.p1.mobile.putong:id/dislike").child(name="android.widget.ImageView").click()
-        time.sleep(1)
-            # continue
+        try:
+            detect()
+        except:
+            try:
+                poco(name="com.p1.mobile.putong:id/dislike").child(name="android.widget.ImageView").click()
+                time.sleep(1)
+                continue
+            except:
+                swipe(v1=(480, 986), vector=[-0.6039, 0.0573])
+                time.sleep(1)
+                continue
     Ts=time.perf_counter()
     print('程序运行时间:%s秒' % (Ts - Tf))

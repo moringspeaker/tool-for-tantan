@@ -31,15 +31,15 @@ def open_pic2base64():
     img = base64.b64encode(f.read()).decode('utf-8')
     return img
 
-#@timeout_decorator.timeout(5)
+# @timeout_decorator.timeout(20)
 def request_data(request_url,params,header):
     s = requests.session()
     s.keep_alive = False
-    response1 = s.post(url=request_url, data=params, headers=header)
+    response1 = s.post(url=request_url, data=params, headers=header,timeout=20)
     json1 = response1.json()
     if json1['error_code'] != 0:
         print('不露脸，那没办法了')
-    #     return (1, 0)
+        return (1, 0)
     # print(json.loads(json.dumps(json1)))
     # print("性别为", json1["result"]["face_list"][0]['gender']['type'])
     # print("年龄为", json1["result"]["face_list"][0]['age'], '岁')
